@@ -1,11 +1,14 @@
-name: Python Checks
+name: Publish library
 
 on:
-  workflow_call:
   push:
 
 jobs:
-  test:
+  checks:
+    uses: ./.github/workflows/checks.yml
+
+  publish:
+    needs: checks
     runs-on: ubuntu-latest
 
     steps:
@@ -18,9 +21,6 @@ jobs:
         
     - name: Install dependencies
       run: uv sync
-        
-    - name: Lint with ruff
-      run: uv run ruff check .
-      
-    - name: Run tests
-      run: uv run pytest tests/
+
+    - name: Publish to pypi
+      run: uv build
