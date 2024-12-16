@@ -25,7 +25,7 @@ replace = "{new_version}"
 regex = false
 ignore_missing_version = false
 ignore_missing_files = false
-tag = false
+tag = true
 sign_tags = false
 tag_name = "v{new_version}"
 tag_message = "version: {current_version} → {new_version}"
@@ -33,7 +33,7 @@ allow_dirty = false
 commit = true
 message = "version: {current_version} → {new_version}"
 pre_commit_hooks = [
-    "uv lock --upgrade-package dict-magic",
+    "uv lock --upgrade-package magiccionary",
     "git add uv.lock",
 ]
 
@@ -41,7 +41,7 @@ pre_commit_hooks = [
 filename = "pyproject.toml"
 
 [[tool.bumpversion.files]]
-filename = "src/dict_magic/__init__.py"
+filename = "src/magiccionary/__init__.py"
 
 [build-system]
 requires = ["setuptools>=42"]
