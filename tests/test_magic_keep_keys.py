@@ -1,4 +1,4 @@
-from dict_magic.magic import keep_keys
+from magiccionary.magic import keep_keys
 
 
 def test_keep_mixed_list():
