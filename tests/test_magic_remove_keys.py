@@ -1,4 +1,4 @@
-from dict_magic.magic import remove_keys
+from magiccionary.magic import remove_keys
 
 
 def test_simple_one_non_existing_key():

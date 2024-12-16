@@ -1,0 +1,28 @@
+name: Python Checks
+
+on:
+  workflow_call:
+  push:
+    tags-ignore:
+      - '**'  # Ignore all tags
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        python-version: "3.10"
+        
+    - name: Install dependencies
+      run: uv sync
+        
+    - name: Lint with ruff
+      run: uv run ruff check .
+      
+    - name: Run tests
+      run: uv run pytest tests/
