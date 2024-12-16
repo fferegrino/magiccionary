@@ -3,6 +3,8 @@ name: Python Checks
 on:
   workflow_call:
   push:
+    tags-ignore:
+      - '**'  # Ignore all tags
 
 jobs:
   test:
