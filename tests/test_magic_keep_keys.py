@@ -1,6 +1,60 @@
 from magiccionary.magic import keep_keys
 
 
+def test_keep_multiple_ultra_nested():
+    input = {
+        "a": {
+            "b": [
+                {"c": {"d": 1, "e": [{"f": 1, "g": 2}]}, "d": 2, "e": 3},
+                {"c": {"d": 1, "e": [{"f": 1, "g": 2}]}, "d": 2, "e": 3},
+            ],
+            "c": [
+                {"c": {"d": 1, "e": [{"f": 1, "g": 2}]}, "d": 2, "e": 3},
+                {"c": {"d": 1, "e": [{"f": 1, "g": 2}]}, "d": 2, "e": 3},
+            ]
+        },
+    }
+
+    expected = {
+        "a": {
+            "b": [
+                {"c": {"d": 1, "e": [{"f": 1}]}, "d": 2},
+                {"c": {"d": 1, "e": [{"f": 1}]}, "d": 2},
+            ],
+            "c": [
+                {"c": {"d": 1, "e": [{"f": 1}]}, "d": 2},
+                {"c": {"d": 1, "e": [{"f": 1}]}, "d": 2},
+            ]
+        }
+    }
+    actual = keep_keys(input, [
+        ["a", "*", "[]", [["c", ["d", ["e", "[]", "f"]]], "d"]]
+    ])
+
+    assert actual == expected
+
+def test_keep_multiple_in_dict():
+    input = {
+        "a": {
+            "b": [
+                {"c": 1, "d": 2, "e": 3},
+                {"c": 1, "d": 2, "e": 3},
+            ]
+        },
+    }
+
+    expected = {
+        "a": {
+            "b": [
+                {"c": 1, "d": 2},
+                {"c": 1, "d": 2},
+            ]
+        }
+    }
+    actual = keep_keys(input, [["a", "b", "[]", ["c", "d"]]])
+
+    assert actual == expected
+
 def test_keep_mixed_list():
     input = {
         "a": {

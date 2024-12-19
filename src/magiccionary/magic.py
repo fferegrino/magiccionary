@@ -48,6 +48,9 @@ def _keep_keys(data, single_key_to_keep):
         for key, value in data.items():
             dict_to_keep[key] = _keep_keys(value, single_key_to_keep[1:])
         return dict_to_keep
+    elif isinstance(first_key, list):
+        if isinstance(data, dict):
+            return keep_keys(data, first_key)
     elif first_key in data:
         if len(single_key_to_keep) == 1:
             dict_to_keep[first_key] = data[first_key]
