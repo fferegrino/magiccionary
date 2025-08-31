@@ -11,7 +11,7 @@ def test_keep_multiple_ultra_nested():
             "c": [
                 {"c": {"d": 1, "e": [{"f": 1, "g": 2}]}, "d": 2, "e": 3},
                 {"c": {"d": 1, "e": [{"f": 1, "g": 2}]}, "d": 2, "e": 3},
-            ]
+            ],
         },
     }
 
@@ -24,14 +24,13 @@ def test_keep_multiple_ultra_nested():
             "c": [
                 {"c": {"d": 1, "e": [{"f": 1}]}, "d": 2},
                 {"c": {"d": 1, "e": [{"f": 1}]}, "d": 2},
-            ]
+            ],
         }
     }
-    actual = keep_keys(input, [
-        ["a", "*", "[]", [["c", ["d", ["e", "[]", "f"]]], "d"]]
-    ])
+    actual = keep_keys(input, [["a", "*", "[]", [["c", ["d", ["e", "[]", "f"]]], "d"]]])
 
     assert actual == expected
+
 
 def test_keep_multiple_in_dict():
     input = {
@@ -54,6 +53,7 @@ def test_keep_multiple_in_dict():
     actual = keep_keys(input, [["a", "b", "[]", ["c", "d"]]])
 
     assert actual == expected
+
 
 def test_keep_mixed_list():
     input = {
@@ -177,13 +177,18 @@ def test_keep_simple_non_existing_key():
 
 
 def test_keep_simple():
-    input = { "a": 1, "b": 2, "c": 3, }
-    expected = { "a": 1, "b": 2, }
+    input = {
+        "a": 1,
+        "b": 2,
+        "c": 3,
+    }
+    expected = {
+        "a": 1,
+        "b": 2,
+    }
     input_copy = input.copy()
-    
+
     actual = keep_keys(input, ["a", "b"])
 
     assert actual == expected
     assert input == input_copy
-
-

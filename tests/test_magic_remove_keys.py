@@ -1,4 +1,5 @@
 from magiccionary.magic import remove_keys
+from copy import deepcopy
 
 
 def test_simple_one_non_existing_key():
@@ -7,6 +8,7 @@ def test_simple_one_non_existing_key():
         "b": 2,
         "c": 3,
     }
+    input_copy = deepcopy(input)
     expected = {
         "a": 1,
         "b": 2,
@@ -15,7 +17,7 @@ def test_simple_one_non_existing_key():
     actual = remove_keys(input, ["z"])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_simple_one_non_existing_key_list():
@@ -28,6 +30,7 @@ def test_simple_one_non_existing_key_list():
             },
         }
     }
+    input_copy = deepcopy(input)
     expected = {
         "a": {
             "b": {
@@ -40,7 +43,7 @@ def test_simple_one_non_existing_key_list():
     actual = remove_keys(input, [["a", "c", "*", "z"]])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_mixed_list():
@@ -62,7 +65,7 @@ def test_mixed_list():
             },
         },
     }
-
+    input_copy = deepcopy(input)
     expected = {
         "a": {
             "aa": {
@@ -74,10 +77,11 @@ def test_mixed_list():
             },
         },
     }
+
     actual = remove_keys(input, [["*", "*", "one", "[]", "a"], ["a", "bb", "one"], ["b"]])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_mixed_removables_2():
@@ -99,7 +103,7 @@ def test_mixed_removables_2():
             },
         },
     }
-
+    input_copy = deepcopy(input)
     expected = {
         "a": {
             "aa": {
@@ -121,7 +125,7 @@ def test_mixed_removables_2():
     actual = remove_keys(input, [["*", "*", "one", "[]", "a"]])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_mixed_removables():
@@ -149,7 +153,7 @@ def test_mixed_removables():
             ],
         }
     }
-
+    input_copy = deepcopy(input)
     expected = {
         "a": {
             "list": [
@@ -171,7 +175,7 @@ def test_mixed_removables():
     actual = remove_keys(input, [["a", "list", "[]", "*", "one"]])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_arbitrary_dict_keys():
@@ -191,6 +195,7 @@ def test_arbitrary_dict_keys():
             },
         }
     }
+    input_copy = deepcopy(input)
 
     expected = {
         "a": {
@@ -203,7 +208,7 @@ def test_arbitrary_dict_keys():
     actual = remove_keys(input, [["a", "*", "c"]])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_with_list_level():
@@ -213,16 +218,18 @@ def test_with_list_level():
             {"c": 2},
         ]
     }
+    input_copy = deepcopy(input)
     expected = {
         "a": [
             {"b": 1},
             {},
         ]
     }
+
     actual = remove_keys(input, [["a", "[]", "c"]])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_simple_one_level():
@@ -231,14 +238,16 @@ def test_simple_one_level():
         "b": 2,
         "c": 3,
     }
+    input_copy = deepcopy(input)
     expected = {
         "a": 1,
         "b": 2,
     }
+
     actual = remove_keys(input, ["c"])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_simple_two_level():
@@ -248,15 +257,17 @@ def test_simple_two_level():
             "c": 3,
         }
     }
+    input_copy = deepcopy(input)
     expected = {
         "a": {
             "b": 2,
         }
     }
+
     actual = remove_keys(input, [["a", "c"]])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
 
 
 def test_simple_three_level():
@@ -268,11 +279,13 @@ def test_simple_three_level():
         },
         "d": 4,
     }
+    input_copy = deepcopy(input)
     expected = {
         "a": {"b": {}},
         "d": 4,
     }
+
     actual = remove_keys(input, [["a", "b", "c"]])
 
     assert actual == expected
-    assert expected == input
+    assert input == input_copy  # Input should remain unchanged
