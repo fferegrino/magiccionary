@@ -13,6 +13,6 @@ Main functions:
 
 from .magic import remove_keys, keep_keys, remove_empty_keys, nested_update  # noqa
 
-__version__ = "0.1.4"
+__version__ = "1.0.0"
 
 __all__ = ["remove_keys", "keep_keys", "remove_empty_keys", "nested_update"]
