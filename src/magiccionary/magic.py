@@ -206,16 +206,32 @@ def _remove_empty_keys_inplace(data):
             if not value:
                 empty_keys.append(key)
         elif isinstance(value, list):
-            for item in value:
-                if isinstance(item, dict):
-                    _remove_empty_keys_inplace(item)
-                    if not item:
-                        empty_keys.append(key)
-                elif isinstance(item, str):
-                    if not item:
-                        empty_keys.append(key)
+            _prune_empty_list_items_inplace(value)
+            if not value:
+                empty_keys.append(key)
     for key in empty_keys:
         del data[key]
+
+
+def _prune_empty_list_items_inplace(lst):
+    """
+    Remove empty items (None, "", {}, []) from a list in-place,
+    recursing into nested dicts and lists.
+    """
+    for i in range(len(lst) - 1, -1, -1):
+        item = lst[i]
+        if item is None:
+            del lst[i]
+        elif isinstance(item, str) and not item:
+            del lst[i]
+        elif isinstance(item, dict):
+            _remove_empty_keys_inplace(item)
+            if not item:
+                del lst[i]
+        elif isinstance(item, list):
+            _prune_empty_list_items_inplace(item)
+            if not item:
+                del lst[i]
 
 
 def nested_update(original, update):
