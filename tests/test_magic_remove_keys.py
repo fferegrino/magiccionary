@@ -314,6 +314,31 @@ def test_top_level_list_wildcard_clears_all_items():
     assert input == input_copy
 
 
+def test_descending_into_list_without_bracket_is_noop():
+    # Without the "[]" token, the path cannot address list items.
+    # Previously this raised TypeError from list.pop(str, None); now it
+    # is a silent no-op.
+    input = {"a": [{"b": 1}]}
+    input_copy = deepcopy(input)
+    expected = deepcopy(input)
+
+    actual = remove_keys(input, [["a", "b"]])
+
+    assert actual == expected
+    assert input == input_copy
+
+
+def test_descending_into_list_without_bracket_deeper_path():
+    input = {"a": [{"b": {"c": 1}}]}
+    input_copy = deepcopy(input)
+    expected = deepcopy(input)
+
+    actual = remove_keys(input, [["a", "b", "c"]])
+
+    assert actual == expected
+    assert input == input_copy
+
+
 def test_simple_three_level():
     input = {
         "a": {

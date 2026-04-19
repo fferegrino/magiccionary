@@ -22,6 +22,10 @@ def _remove_keys(data, single_key_to_remove):
         else:
             for value in data.values():
                 _remove_keys(value, single_key_to_remove[1:])
+    elif not isinstance(data, dict):
+        # Lists require the "[]" token to traverse; any other path segment
+        # is treated as a no-op rather than attempting list.pop(str).
+        return
     elif len(single_key_to_remove) == 1:
         data.pop(first_key, None)
     elif first_key in data:
