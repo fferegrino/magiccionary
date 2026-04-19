@@ -270,6 +270,50 @@ def test_simple_two_level():
     assert input == input_copy  # Input should remain unchanged
 
 
+def test_trailing_list_wildcard_clears_list():
+    input = {"items": [1, 2, 3]}
+    input_copy = deepcopy(input)
+    expected = {"items": []}
+
+    actual = remove_keys(input, [["items", "[]"]])
+
+    assert actual == expected
+    assert input == input_copy
+
+
+def test_trailing_dict_wildcard_clears_dict():
+    input = {"users": {"a": 1, "b": 2}}
+    input_copy = deepcopy(input)
+    expected = {"users": {}}
+
+    actual = remove_keys(input, [["users", "*"]])
+
+    assert actual == expected
+    assert input == input_copy
+
+
+def test_top_level_dict_wildcard_clears_all_keys():
+    input = {"a": 1, "b": 2}
+    input_copy = deepcopy(input)
+    expected = {}
+
+    actual = remove_keys(input, [["*"]])
+
+    assert actual == expected
+    assert input == input_copy
+
+
+def test_top_level_list_wildcard_clears_all_items():
+    input = [1, 2, 3]
+    input_copy = deepcopy(input)
+    expected = []
+
+    actual = remove_keys(input, [["[]"]])
+
+    assert actual == expected
+    assert input == input_copy
+
+
 def test_simple_three_level():
     input = {
         "a": {

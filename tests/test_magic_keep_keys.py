@@ -162,6 +162,33 @@ def test_keep_simple_two_level():
     assert actual == expected
 
 
+def test_keep_trailing_list_wildcard_keeps_all_items():
+    input = {"items": [1, 2, 3]}
+    expected = {"items": [1, 2, 3]}
+
+    actual = keep_keys(input, [["items", "[]"]])
+
+    assert actual == expected
+
+
+def test_keep_trailing_dict_wildcard_keeps_all_values():
+    input = {"users": {"a": 1, "b": 2}}
+    expected = {"users": {"a": 1, "b": 2}}
+
+    actual = keep_keys(input, [["users", "*"]])
+
+    assert actual == expected
+
+
+def test_keep_top_level_dict_wildcard_keeps_everything():
+    input = {"a": 1, "b": 2}
+    expected = {"a": 1, "b": 2}
+
+    actual = keep_keys(input, [["*"]])
+
+    assert actual == expected
+
+
 def test_keep_simple_non_existing_key():
     input = {
         "a": 1,

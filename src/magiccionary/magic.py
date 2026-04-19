@@ -11,11 +11,17 @@ def _remove_keys(data, single_key_to_remove):
     """
     first_key = single_key_to_remove[0]
     if first_key == "[]" and isinstance(data, list):
-        for item in data:
-            _remove_keys(item, single_key_to_remove[1:])
+        if len(single_key_to_remove) == 1:
+            data.clear()
+        else:
+            for item in data:
+                _remove_keys(item, single_key_to_remove[1:])
     elif first_key == "*" and isinstance(data, dict):
-        for key, value in data.items():
-            _remove_keys(value, single_key_to_remove[1:])
+        if len(single_key_to_remove) == 1:
+            data.clear()
+        else:
+            for value in data.values():
+                _remove_keys(value, single_key_to_remove[1:])
     elif len(single_key_to_remove) == 1:
         data.pop(first_key, None)
     elif first_key in data:
@@ -126,12 +132,16 @@ def _keep_keys(data, single_key_to_keep):
     first_key = single_key_to_keep[0]
 
     if first_key == "[]" and isinstance(data, list):
+        if len(single_key_to_keep) == 1:
+            return list(data)
         list_to_keep = []
         for item in data:
             list_to_keep.append(_keep_keys(item, single_key_to_keep[1:]))
         # Return the list as is
         return list_to_keep
     elif first_key == "*" and isinstance(data, dict):
+        if len(single_key_to_keep) == 1:
+            return dict(data)
         for key, value in data.items():
             dict_to_keep[key] = _keep_keys(value, single_key_to_keep[1:])
         return dict_to_keep
