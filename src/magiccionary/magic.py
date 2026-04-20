@@ -11,11 +11,21 @@ def _remove_keys(data, single_key_to_remove):
     """
     first_key = single_key_to_remove[0]
     if first_key == "[]" and isinstance(data, list):
-        for item in data:
-            _remove_keys(item, single_key_to_remove[1:])
+        if len(single_key_to_remove) == 1:
+            data.clear()
+        else:
+            for item in data:
+                _remove_keys(item, single_key_to_remove[1:])
     elif first_key == "*" and isinstance(data, dict):
-        for key, value in data.items():
-            _remove_keys(value, single_key_to_remove[1:])
+        if len(single_key_to_remove) == 1:
+            data.clear()
+        else:
+            for value in data.values():
+                _remove_keys(value, single_key_to_remove[1:])
+    elif not isinstance(data, dict):
+        # Lists require the "[]" token to traverse; any other path segment
+        # is treated as a no-op rather than attempting list.pop(str).
+        return
     elif len(single_key_to_remove) == 1:
         data.pop(first_key, None)
     elif first_key in data:
@@ -126,12 +136,16 @@ def _keep_keys(data, single_key_to_keep):
     first_key = single_key_to_keep[0]
 
     if first_key == "[]" and isinstance(data, list):
+        if len(single_key_to_keep) == 1:
+            return list(data)
         list_to_keep = []
         for item in data:
             list_to_keep.append(_keep_keys(item, single_key_to_keep[1:]))
         # Return the list as is
         return list_to_keep
     elif first_key == "*" and isinstance(data, dict):
+        if len(single_key_to_keep) == 1:
+            return dict(data)
         for key, value in data.items():
             dict_to_keep[key] = _keep_keys(value, single_key_to_keep[1:])
         return dict_to_keep
@@ -192,16 +206,32 @@ def _remove_empty_keys_inplace(data):
             if not value:
                 empty_keys.append(key)
         elif isinstance(value, list):
-            for item in value:
-                if isinstance(item, dict):
-                    _remove_empty_keys_inplace(item)
-                    if not item:
-                        empty_keys.append(key)
-                elif isinstance(item, str):
-                    if not item:
-                        empty_keys.append(key)
+            _prune_empty_list_items_inplace(value)
+            if not value:
+                empty_keys.append(key)
     for key in empty_keys:
         del data[key]
+
+
+def _prune_empty_list_items_inplace(lst):
+    """
+    Remove empty items (None, "", {}, []) from a list in-place,
+    recursing into nested dicts and lists.
+    """
+    for i in range(len(lst) - 1, -1, -1):
+        item = lst[i]
+        if item is None:
+            del lst[i]
+        elif isinstance(item, str) and not item:
+            del lst[i]
+        elif isinstance(item, dict):
+            _remove_empty_keys_inplace(item)
+            if not item:
+                del lst[i]
+        elif isinstance(item, list):
+            _prune_empty_list_items_inplace(item)
+            if not item:
+                del lst[i]
 
 
 def nested_update(original, update):
